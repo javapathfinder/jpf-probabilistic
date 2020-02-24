@@ -1,0 +1,33 @@
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main"]
+            if (!jpfLabelExists) {
+                exclude "probabilistic/listener/StateLabelVisitor.java"
+            }
+            outputDir = file("${buildDir}/main")
+        }
+        compileClasspath += configurations.compileClasspath
+    }
+    classes {
+        java.srcDirs = ["src/classes"]
+        java.outputDir = file("${buildDir}/classes")
+        compileClasspath += sourceSets.main.output
+    }
+    peers {
+        java.srcDirs = ["src/peers"]
+        java.outputDir = file("${buildDir}/peers")
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+    }
+    examples {
+        java.srcDirs = ["src/examples"]
+        java.outputDir = file("${buildDir}/examples")
+        compileClasspath += sourceSets.main.output + sourceSets.classes.output
+    }
+    test {
+        java.srcDirs = ["src/tests"]
+        java.outputDir = file("${buildDir}/tests")
+        compileClasspath += sourceSets.main.output + sourceSets.classes.output + configurations.testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}

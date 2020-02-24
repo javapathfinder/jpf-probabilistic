@@ -1,0 +1,147 @@
+apply plugin: "java"
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+// find home directory
+ext.userHome = System.getProperty("user.home")
+
+// find JPF's site.properties
+Properties siteProperties = new java.util.Properties()
+try {
+    FileInputStream file = new FileInputStream("${userHome}/.jpf/site.properties")
+    siteProperties.load(file)
+    file.close()
+} catch (FileNotFoundException e) {
+    throw new GradleException("Please install jpf-core first and add the property 'jpf-core' to ${userHome}/.jpf/site.properties pointing to the jpf-core installation")
+}
+
+// find jpf-core
+ext.jpfCoreExists = false
+ext.jpfCore = siteProperties.getProperty("jpf-core")
+if (jpfCore != null) {
+    jpfCore = jpfCore.replace('${user.home}', userHome)
+    jpfCoreExists = new File(jpfCore).exists()
+}
+if (!jpfCoreExists) {
+    throw new GradleException("${userHome}/.jpf/site.properties points to the jpf-core installation at ${jpfCore} but that directory does not exist")
+}
+
+// find jpf-label
+ext.jpfLabel = siteProperties.getProperty("jpf-label")
+ext.jpfLabelExists = false
+if (jpfLabel != null) {
+    jpfLabel = jpfLabel.replace('${user.home}', userHome)
+    jpfLabelExists = new File(jpfLabel).exists()
+}
+
+dependencies {
+    implementation files("${jpfCore}/build/jpf.jar")
+    if (jpfLabelExists) {
+        implementation files("${jpfLabel}/build/jpf-label.jar")
+    }
+    testImplementation "junit:junit:4.12"
+}
+
+apply from: "gradle/source-sets.gradle"
+
+task compile {
+    group = "jpf-probabilistic build"
+    description = "Compiles all jpf-probabilistic sources."
+
+    dependsOn compilePeersJava
+    dependsOn compileExamplesJava
+}
+
+task createJpfProbabilisticJar(type: Jar) {
+    archiveName = "jpf-probabilistic.jar"
+    destinationDir = file("${buildDir}")
+
+    group = "jpf-probabilistic jars"
+    description = "Creates the ${archiveName} file."
+
+    dependsOn compile
+
+    from sourceSets.main.java.outputDir
+    from sourceSets.peers.java.outputDir
+}
+
+task createJpfProbabilisticClassesJar(type: Jar) {
+    archiveName = "jpf-probabilistic-classes.jar"
+    destinationDir = file("${buildDir}")
+
+    group = "jpf-probabilistic jars"
+    description = "Creates the ${archiveName} file."
+
+    dependsOn compile
+
+    from sourceSets.classes.java.outputDir
+}
+
+task createJpfProbabilisticExamplesJar(type: Jar) {
+    archiveName = "jpf-probabilistic-examples.jar"
+    destinationDir = file("${buildDir}")
+
+    group = "jpf-probabilistic jars"
+    description = "Creates the ${archiveName} file."
+
+    dependsOn compile
+
+    from sourceSets.examples.java.outputDir
+}
+
+task buildJars {
+    group = "jpf-probabilistic build"
+    description = "Generates all jpf-probabilistic jar files."
+
+    dependsOn createJpfProbabilisticJar
+    dependsOn createJpfProbabilisticClassesJar
+    dependsOn createJpfProbabilisticExamplesJar
+}
+
+task api(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the jpf-probabilistic API."
+
+    source = sourceSets.main.allJava
+    classpath = configurations.testCompileClasspath
+    options.tags = [ 'pre.:a:Preconditions:' ]
+}
+
+test {
+    description = "Runs tests"
+
+    dependsOn buildJars
+
+    forkEvery = 1
+    enableAssertions = true
+    maxHeapSize = "1024m"
+
+    include "**/*Test.class"
+    if (!jpfLabelExists) {
+        exclude "**/StateSpaceTest.class"
+    }
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    afterSuite { testDescriptor, result ->
+        if (!testDescriptor.parent) {
+            println "Test Execution: ${result.resultType}"
+
+            def summaryFields = ["${result.testCount} tests",
+                                 "${result.successfulTestCount} passed",
+                                 "${result.failedTestCount} failed",
+                                 "${result.skippedTestCount} skipped"]
+
+            println "Summary: " + summaryFields.join(", ")
+        }
+    }
+}
+
+defaultTasks "buildJars"

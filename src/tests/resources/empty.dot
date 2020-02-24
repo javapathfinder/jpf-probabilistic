@@ -1,0 +1,4 @@
+digraph statespace {
+-1 -> 0 [ label="1.00" ];
+0 -> 0 [ label="1.00" ];
+}
