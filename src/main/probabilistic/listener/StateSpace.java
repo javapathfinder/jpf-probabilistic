@@ -157,7 +157,7 @@ public abstract class StateSpace extends ListenerAdapter implements SearchListen
 	 * @return the sum of the probabilities.
 	 */
 	protected double getSum(double[] probabilities, int endIndex) {
-		Arrays.sort(probabilities);
+		Arrays.sort(probabilities, 0, endIndex);
 		double sum = 0;
 		for (int i = 0; i < endIndex; i++) {
 			sum += Double.parseDouble(String.format("%." + this.precision + "f%n", probabilities[i]));
