@@ -2,11 +2,11 @@ digraph statespace {
 node [colorscheme="set312" style=wedged]
 -1 [style=filled fillcolor=1]
 0 [style=filled fillcolor=2]
--1 -> 0 [ label="1.00" ];
+-1 -> 0 [ label="1.000000" ];
 1 [style=filled fillcolor=3]
-0 -> 1 [ label="0.50" ];
-1 -> 1 [ label="1.00" ];
+0 -> 1 [ label="0.500000" ];
+1 -> 1 [ label="1.000000" ];
 2 [style=filled fillcolor=4]
-0 -> 2 [ label="0.50" ];
-2 -> 2 [ label="1.00" ];
+0 -> 2 [ label="0.500000" ];
+2 -> 2 [ label="1.000000" ];
 }

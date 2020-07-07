@@ -33,10 +33,6 @@ import java.io.PrintWriter;
  * single space. The source and target states are represented by an integer and
  * the probability is represented by a double.
  *
- * The precision of the probability can be specified in the application
- * properties file by setting the property probabilistic.statespace.precision.
- * Its default value is two.
- *
  * @author Xin Zhang
  * @author Franck van Breugel
  * @author Syyeda Zainab Fatmi
@@ -58,7 +54,7 @@ public class StateSpaceText extends StateSpace {
 
 	@Override
 	public void addTransition(int source, int target, double probability) {
-		this.result.append(String.format("%d %d %." + this.precision + "f%n", source, target, probability));
+		this.result.append(String.format("%d %d %f%n", source, target, probability));
 		this.transitions++;
 	}
 

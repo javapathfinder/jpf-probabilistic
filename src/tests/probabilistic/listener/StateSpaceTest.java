@@ -432,20 +432,38 @@ public class StateSpaceTest extends TestJPF {
 			Scanner actualFile = new Scanner(new File(actual));
 			Scanner expectedFile = new Scanner(new File(expected));
 			while (expectedFile.hasNextLine()) {
-				if (!actualFile.hasNextLine() || !actualFile.nextLine().equals(expectedFile.nextLine())) {
+				if (!actualFile.hasNextLine()) {
+					System.out.println("Expected file has more lines than actual file");
 					actualFile.close();
 					expectedFile.close();
 					return false;
+				} else {
+					String actualLine = actualFile.nextLine();
+					String expectedLine = expectedFile.nextLine();
+					if (!actualLine.equals(expectedLine)) {
+						System.out.println("Line of actual file: " + actualLine);
+						System.out.println("Line of expected file: " + expectedLine);
+						actualFile.close();
+						expectedFile.close();
+						return false;
+					}
 				}
 			}
-			actualFile.close();
-			expectedFile.close();
-			return true;
+			if (actualFile.hasNextLine()) {
+				System.out.println("Actual file has more lines than expected file");
+				actualFile.close();
+				expectedFile.close();
+				return false;
+			} else {
+				actualFile.close();
+				expectedFile.close();
+				return true;
+			}
 		} catch (FileNotFoundException e) {
 			System.out.println("The file could not be read.");
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	/**

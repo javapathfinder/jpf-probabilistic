@@ -173,38 +173,6 @@ the following content.
     7 -> 5 [ label="0.50" ];
     }
 
-Both the listeners probabilistic.listener.StateSpaceText and
-probabilistic.listener.StateSpaceDot use a property, named
-probabilistic.statespace.precision, that captures the precision
-of the probabilities.  Consider, for example, the following
-configuration file.
-
-	@using jpf-probabilistic
-	target = probabilistic.examples.DieTest
-	listener = probabilistic.listener.StateSpaceDot
-	probabilistic.statespace.precision = 4
-
-For the above application properties file, JPF produces a file
-with the following content.
-
-	  7 15
-	  -1 0 1.0000
-	  0 1 0.5000
-	  1 2 0.5000
-	  2 1 0.5000
-	  2 3 0.5000
-	  3 3 1.0000
-	  1 4 0.5000
-	  4 3 0.5000
-	  4 3 0.5000
-	  0 5 0.5000
-	  5 6 0.5000
-	  6 3 0.5000
-	  6 3 0.5000
-	  5 7 0.5000
-	  7 3 0.5000
-	  7 5 0.5000
-
 jpf-probabilistic can also be used in tandem with jpf-label.  The
 latter JPF extension allows for labelling states.
 

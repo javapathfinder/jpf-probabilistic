@@ -31,10 +31,6 @@ import java.io.PrintWriter;
  * the file is &lt;name of app&gt;.dot. The file contains a graphical
  * representation of the state space that can be viewed with the dotty command.
  * 
- * The precision of the probability can be specified in the application
- * properties file by setting the property probabilistic.statespace.precision.
- * Its default value is two.
- *
  * @author Xin Zhang
  * @author Franck van Breugel
  * @author Syyeda Zainab Fatmi
@@ -57,7 +53,7 @@ public class StateSpaceDot extends StateSpace implements PublisherExtension {
 	@Override
 	public void addTransition(int source, int target, double probability) {
 		this.result.append(
-				String.format("%d -> %d [ label=\"%." + this.precision + "f\" ];%n", source, target, probability));
+				String.format("%d -> %d [ label=\"%f\" ];%n", source, target, probability));
 	}
 
 	@Override

@@ -38,7 +38,6 @@ import probabilistic.vm.ProbabilisticChoiceGenerator;
 public abstract class StateSpace extends ListenerAdapter implements SearchListener {
 	private int states; // number of states
 	private int source; // id of the source of the next transition
-	public final int precision; // precision of the probabilities
 
 	/**
 	 * Initializes the listener.
@@ -48,7 +47,6 @@ public abstract class StateSpace extends ListenerAdapter implements SearchListen
 	public StateSpace(Config configuration) {
 		this.source = -1;
 		this.states = 0;
-		this.precision = configuration.getInt("probabilistic.statespace.precision", 2);
 	}
 
 	/**
@@ -149,8 +147,7 @@ public abstract class StateSpace extends ListenerAdapter implements SearchListen
 	public abstract void writeStateSpace(Search search, String name);
 
 	/**
-	 * Sums the array of probabilities, with the specified precision, until the
-	 * specified index (exclusive).
+	 * Sums the array of probabilities until the specified index (exclusive).
 	 * 
 	 * @param probabilities the array of probabilities.
 	 * @param endIndex      the index at which to stop (exclusive).
@@ -160,7 +157,7 @@ public abstract class StateSpace extends ListenerAdapter implements SearchListen
 		Arrays.sort(probabilities, 0, endIndex);
 		double sum = 0;
 		for (int i = 0; i < endIndex; i++) {
-			sum += Double.parseDouble(String.format("%." + this.precision + "f%n", probabilities[i]));
+			sum += probabilities[i];
 		}
 		return sum;
 	}
