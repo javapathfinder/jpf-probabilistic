@@ -107,9 +107,9 @@ coded in Java as follows.
 		}
 	}
 
-JPF, extended with jpf-probabilistic and configured appropriately, can
-write the Markov chain underlying the above code to a file.  For example, 
-if we use the following configuration file
+JPF, extended with jpf-probabilistic and configured appropriately, can write 
+the Markov chain underlying an app, called DieTest, that invokes the above roll 
+method, to a file.  For example, if we use the following configuration file
 
     @using jpf-probabilistic
     target = probabilistic.examples.DieTest
@@ -117,24 +117,25 @@ if we use the following configuration file
 
 then JPF writes the following output to the file probabilistic.examples.DieTest.tra.
 
-     7 15
-     0 1 0.50
-     1 2 0.50
-     2 1 0.50
-     2 3 0.50
-     3 3 1.00
-     1 4 0.50
-     4 3 0.50
-     4 3 0.50
-     0 5 0.50
-     5 6 0.50
-     6 3 0.50
-     6 3 0.50
-     5 7 0.50
-     7 3 0.50
-     7 5 0.50
+     9 16
+     -1 0 1.000000
+     0 1 0.500000
+     1 2 0.500000
+     2 1 0.500000
+     2 3 0.500000
+     3 3 1.000000
+     1 4 0.500000
+     4 3 0.500000
+     4 3 0.500000
+     0 5 0.500000
+     5 6 0.500000
+     6 3 0.500000
+     6 3 0.500000
+     5 7 0.500000
+     7 3 0.500000
+     7 5 0.500000
 
-The first line contains the number of states and the number of transitions.  
+The first line contains the number of states and the number of transitions.
 The remaining lines describe the transitions.  Each line contains the 
 source state, the target state and the probability of the transition from 
 the source state to the target state.  The above textual representation of 
@@ -149,29 +150,36 @@ if we run JPF on the following configuration file
     @using jpf-probabilistic
     target = probabilistic.examples.DieTest
     listener = probabilistic.listener.StateSpaceDot
+    probabilistic.listener.StateSpaceDot.precision = 1
 
 then JPF produces a file named probabilistic.examples.DieTest.dot with
 the following content.
 
     digraph statespace {
-    node [colorscheme="set312" style=wedged]
-    -1 -> 0 [ label="1.00" ];
-    0 -> 1 [ label="0.50" ];
-    1 -> 2 [ label="0.50" ];
-    2 -> 1 [ label="0.50" ];
-    2 -> 3 [ label="0.50" ];
-    3 -> 3 [ label="1.00" ];
-    1 -> 4 [ label="0.50" ];
-    4 -> 3 [ label="0.50" ];
-    4 -> 3 [ label="0.50" ];
-    0 -> 5 [ label="0.50" ];
-    5 -> 6 [ label="0.50" ];
-    6 -> 3 [ label="0.50" ];
-    6 -> 3 [ label="0.50" ];
-    5 -> 7 [ label="0.50" ];
-    7 -> 3 [ label="0.50" ];
-    7 -> 5 [ label="0.50" ];
+    -1 -> 0 [ label="1.0" ];
+    0 -> 1 [ label="0.5" ];
+    1 -> 2 [ label="0.5" ];
+    2 -> 1 [ label="0.5" ];
+    2 -> 3 [ label="0.5" ];
+    3 -> 3 [ label="1.0" ];
+    1 -> 4 [ label="0.5" ];
+    4 -> 3 [ label="0.5" ];
+    4 -> 3 [ label="0.5" ];
+    0 -> 5 [ label="0.5" ];
+    5 -> 6 [ label="0.5" ];
+    6 -> 3 [ label="0.5" ];
+    6 -> 3 [ label="0.5" ];
+    5 -> 7 [ label="0.5" ];
+    7 -> 3 [ label="0.5" ];
+    7 -> 5 [ label="0.5" ];
     }
+
+Note that probabilistic.listener.StateSpaceDot.precision captures the
+number of digits of precision of the transition probabilities.  The
+default value for the property probabilistic.listener.StateSpaceDot.precision
+is two.  The above file represents the following diagram.
+
+![Graphical representation of the Markov chain](statespace.png)
 
 jpf-probabilistic can also be used in tandem with jpf-label.  The
 latter JPF extension allows for labelling states.

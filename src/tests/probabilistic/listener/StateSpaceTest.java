@@ -72,6 +72,7 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	private static String[] singleLabelMakerProperties = { "+cg.enumerate_random=true",
 			"+listener=probabilistic.listener.StateSpaceText;probabilistic.listener.StateLabelVisitor;probabilistic.listener.StateSpaceDot",
+			"+probabilistic.listener.StateSpaceDot.precision=6",
 			"", "" };
 
 	/**
@@ -79,6 +80,7 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	private static String[] multipleLabelMakerProperties = { "+cg.enumerate_random=true",
 			"+listener=probabilistic.listener.StateSpaceText;probabilistic.listener.StateLabelVisitor;probabilistic.listener.StateSpaceDot",
+			"+probabilistic.listener.StateSpaceDot.precision=6",
 			"+label.class = label.AllDifferent; label.Initial; label.End;"
 					+ "label.InvokedStaticMethod; label.PositiveIntegerLocalVariable;"
 					+ "label.ReturnedVoidMethod; label.BooleanStaticField",
@@ -130,8 +132,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void emptyTest() {
-		singleLabelMakerProperties[2] = "";
 		singleLabelMakerProperties[3] = "";
+		singleLabelMakerProperties[4] = "";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			// do nothing
@@ -146,8 +148,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void initialTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.Initial";
-		singleLabelMakerProperties[3] = "";
+		singleLabelMakerProperties[3] = "+label.class=label.Initial";
+		singleLabelMakerProperties[4] = "";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -167,8 +169,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void finalTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.End";
-		singleLabelMakerProperties[3] = "";
+		singleLabelMakerProperties[3] = "+label.class=label.End";
+		singleLabelMakerProperties[4] = "";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -188,8 +190,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void allDifferentTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.AllDifferent";
-		singleLabelMakerProperties[3] = "";
+		singleLabelMakerProperties[3] = "+label.class=label.AllDifferent";
+		singleLabelMakerProperties[4] = "";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -209,8 +211,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void booleanStaticFieldTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.BooleanStaticField";
-		singleLabelMakerProperties[3] = "+label.BooleanStaticField.field = probabilistic.listener.StateSpaceTest$Tester.condition";
+		singleLabelMakerProperties[3] = "+label.class=label.BooleanStaticField";
+		singleLabelMakerProperties[4] = "+label.BooleanStaticField.field = probabilistic.listener.StateSpaceTest$Tester.condition";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			int i = 0;
@@ -235,8 +237,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void positiveIntegerLocalVariableTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.PositiveIntegerLocalVariable";
-		singleLabelMakerProperties[3] = "+label.PositiveIntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.positiveIntegerLocalVariableTest():variable";
+		singleLabelMakerProperties[3] = "+label.class=label.PositiveIntegerLocalVariable";
+		singleLabelMakerProperties[4] = "+label.PositiveIntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.positiveIntegerLocalVariableTest():variable";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			int variable = 0;
@@ -261,8 +263,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void invokedStaticMethodTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.InvokedStaticMethod";
-		singleLabelMakerProperties[3] = "+label.InvokedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.M()";
+		singleLabelMakerProperties[3] = "+label.class=label.InvokedStaticMethod";
+		singleLabelMakerProperties[4] = "+label.InvokedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.M()";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -285,8 +287,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void returnedVoidMethodTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.ReturnedVoidMethod";
-		singleLabelMakerProperties[3] = "+label.ReturnedVoidMethod.method = probabilistic.listener.StateSpaceTest$Tester.N()";
+		singleLabelMakerProperties[3] = "+label.class=label.ReturnedVoidMethod";
+		singleLabelMakerProperties[4] = "+label.ReturnedVoidMethod.method = probabilistic.listener.StateSpaceTest$Tester.N()";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -310,8 +312,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void synchronizedStaticMethodTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.SynchronizedStaticMethod";
-		singleLabelMakerProperties[3] = "+label.SynchronizedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.S()";
+		singleLabelMakerProperties[3] = "+label.class=label.SynchronizedStaticMethod";
+		singleLabelMakerProperties[4] = "+label.SynchronizedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.S()";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -334,8 +336,8 @@ public class StateSpaceTest extends TestJPF {
 	 */
 	@Test
 	public void throwableTest() {
-		singleLabelMakerProperties[2] = "+label.class=label.ThrownException";
-		singleLabelMakerProperties[3] = "+label.ThrownException.type = java.io.FileNotFoundException;"
+		singleLabelMakerProperties[3] = "+label.class=label.ThrownException";
+		singleLabelMakerProperties[4] = "+label.ThrownException.type = java.io.FileNotFoundException;"
 				+ "java.lang.IllegalArgumentException;java.lang.AssertionError";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
