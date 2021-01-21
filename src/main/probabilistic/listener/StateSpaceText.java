@@ -54,7 +54,7 @@ public class StateSpaceText extends StateSpace {
 
 	@Override
 	public void addTransition(int source, int target, double probability) {
-		this.result.append(String.format("%d %d %f%n", source, target, probability));
+		this.result.append(source + " " + target + " " + probability + "\n");
 		this.transitions++;
 	}
 

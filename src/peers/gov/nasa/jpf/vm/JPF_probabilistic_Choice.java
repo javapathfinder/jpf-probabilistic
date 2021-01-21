@@ -33,17 +33,15 @@ public class JPF_probabilistic_Choice extends NativePeer {
 	public JPF_probabilistic_Choice() {}
 
 	/**
-	 * Returns the number of times this invocation of the make method has been
-	 * encountered before by JPF. This number corresponds to a choice. The first
-	 * return is ignored by JPF.
+	 * Returns a choice corresponding to this invocation of the make method.
+	 * The first return is ignored by JPF.
 	 * 
 	 * @param env JPF environment.
 	 * @param dummy arbitrary integer (plays no role in the method, but this
 	 * parameter is needed for JPF to work properly).
 	 * @param pRef reference to an array <code>p</code> of probabilities.
 	 * @pre. <code>p[0] + ... + p[p.length - 1] = 1.0</code>.
-	 * @return the number of times this invocation of the make method has been
-	 * encountered before by JPF.
+	 * @return a choice corresponding to this invocation of the make method.
 	 */
 	@MJI
 	public static int make___3D__I(MJIEnv env, int dummy, int pRef) {

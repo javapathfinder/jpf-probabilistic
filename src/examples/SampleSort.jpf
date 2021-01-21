@@ -1,0 +1,28 @@
+# app checked by JPF
+target=probabilistic.test.SampleSort
+
+# command line arguments of app
+target.args=3,3,12,5,6
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-label and jpf-probabilistic
+@using jpf-label
+@using jpf-probabilistic
+
+# label the final states
+label.class=label.End
+
+# generate a textual representation of the labelled Markov chain
+listener=label.StateLabelText,probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the labelled Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot,probabilistic.listener.StateLabelVisitor,probabilistic.listener.ExploredStatesVisitor
+
+# use JPF's probability first search strategy to explore the state space
+search.class=probabilistic.search.PFSearch  
+
+# limit the search to 30 seconds
+listener+=,gov.nasa.jpf.listener.BudgetChecker
+budget.max_time=30000

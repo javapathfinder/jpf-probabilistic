@@ -1,0 +1,22 @@
+# app checked by JPF
+target=probabilistic.test.SetIsolation
+
+# command line arguments of app
+target.args=3,1,0,1
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-label and jpf-probabilistic
+@using jpf-label
+@using jpf-probabilistic
+
+# label the states with the value of boolean static field isGoodSample
+label.class=label.BooleanStaticField
+label.BooleanStaticField.field=probabilistic.test.SetIsolation.isGoodSample
+
+# generate a textual representation of the labelled Markov chain
+listener=label.StateLabelText,probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the labelled Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot,probabilistic.listener.StateLabelVisitor

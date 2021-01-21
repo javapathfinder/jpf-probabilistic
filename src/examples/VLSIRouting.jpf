@@ -1,0 +1,20 @@
+# app checked by JPF
+target=probabilistic.test.VLSIRouting
+
+# command line arguments of app
+target.args=3,3,4,0,2,1,0,1,2,2,0,2,2,0,1,2,2,2,0
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# commons-math3-3.6.1.jar is licensed under the Apache License, Version 2.0
+classpath+=,${jpf-probabilistic}/lib/commons-math3-3.6.1.jar
+
+# using the JPF extensions jpf-probabilistic
+@using jpf-probabilistic
+
+# generate a textual representation of the Markov chain
+listener=probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot

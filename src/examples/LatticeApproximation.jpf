@@ -1,0 +1,18 @@
+# app checked by JPF
+target=probabilistic.test.LatticeApproximation
+
+# command line arguments of app
+target.args=5,0.2,0.3,0.6,0.3,0.7,1,0,0,0,0,1,1,1,1,0,1,1,0,0,1,0,0,1,0,1,0,0,0,1,1
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-probabilistic
+@using jpf-probabilistic
+
+# generate a textual representation of the Markov chain
+listener=probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot
+

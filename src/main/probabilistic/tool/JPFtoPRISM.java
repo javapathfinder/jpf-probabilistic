@@ -35,7 +35,8 @@ public class JPFtoPRISM {
 	 */
 	public static void main(String[] args) throws IncorrectFileFormatException {
 		if (args.length != 2) {
-			System.out.println("Usage: java probabilistic.tool.JPFtoPRISM <file name of JPF model> <file name of PRISM model>");
+			System.out.println(
+					"Usage: java probabilistic.tool.JPFtoPRISM <file name of JPF model> <file name of PRISM model>");
 		} else {
 			try {
 				final String modelJPF = args[0];
@@ -68,19 +69,19 @@ public class JPFtoPRISM {
 
 				for (int s = 0; s < states; s++) {
 					for (Entry<Integer, Double> t : stateArray[s].transitions.entrySet()) {
-						output.append(String.format("%d %d %f%n", s, t.getKey(), t.getValue()));
+						output.append(s + " " + t.getKey() + " " + t.getValue() + "\n");
 						transitions++;
 					}
 					// add the transitions to the sink state if required
 					double leftOver = 1.0 - stateArray[s].sum;
 					if (Math.abs(leftOver) >= epsilon) {
-						output.append(String.format("%d %d %f%n", s, states, leftOver));
+						output.append(s + " " + states + " " + leftOver + "\n");
 						transitions++;
 						addSink = true;
 					}
 				}
 				if (addSink) {
-					output.append(String.format("%d %d %f%n", states, states, 1.0));
+					output.append(states + " " + states + " " + 1.0 + "\n");
 					transitions++;
 					states++;
 				}
@@ -94,6 +95,8 @@ public class JPFtoPRISM {
 				// check if there is a label file
 				File labelFile = new File(modelJPF + ".lab");
 				if (labelFile.isFile()) {
+					final String initLabel = "=\"init\"";
+					final String sinkLabel = "=\"sink\"";
 
 					// read the label file
 					input = new Scanner(labelFile);
@@ -101,72 +104,87 @@ public class JPFtoPRISM {
 
 					// check if the preconditions for the labels hold
 					String labelNames = input.nextLine().trim();
-					final String[] keywords = { "A", "bool", "clock", "const", "ctmc", "C", "double", "dtmc", "E",
-							"endinit", "endinvariant", "endmodule", "endrewards", "endsystem", "false", "formula",
-							"filter", "func", "F", "global", "G", "invariant", "I", "int", "label", "max", "mdp", "min",
-							"module", "X", "nondeterministic", "Pmax", "Pmin", "P", "probabilistic", "prob", "pta",
-							"rate", "rewards", "Rmax", "Rmin", "R", "S", "stochastic", "system", "true", "U", "W" };
-					for (String keyword : keywords) {
-						if (labelNames.contains("\"" + keyword + "\"")) {
-							input.close();
-							throw new IncorrectFileFormatException(
-									"Labels cannot be reserved keywords in PRISM, such as \"" + keyword + "\".");
+					if (!labelNames.isEmpty()) {
+						final String[] keywords = { "A", "bool", "clock", "const", "ctmc", "C", "double", "dtmc", "E",
+								"endinit", "endinvariant", "endmodule", "endrewards", "endsystem", "false", "formula",
+								"filter", "func", "F", "global", "G", "invariant", "I", "int", "label", "max", "mdp",
+								"min", "module", "X", "nondeterministic", "Pmax", "Pmin", "P", "probabilistic", "prob",
+								"pta", "rate", "rewards", "Rmax", "Rmin", "R", "S", "stochastic", "system", "true", "U",
+								"W" };
+						for (String keyword : keywords) {
+							if (labelNames.contains("\"" + keyword + "\"")) {
+								input.close();
+								throw new IncorrectFileFormatException(
+										"Labels cannot be reserved keywords in PRISM, such as \"" + keyword + "\".");
+							}
 						}
-					}
-					final String[] labels = labelNames.split("\\s");
-					for (String label : labels) {
-						if (!label.matches("[0-9]+=\"[A-Za-z_][A-Za-z0-9_]*\"")) {
-							input.close();
-							throw new IncorrectFileFormatException("Labels can only be made of letters, digits and the "
-									+ "underscore character, but must not begin with a digit or contain whitespace.");
+						final String[] labels = labelNames.split("\\s");
+						for (String label : labels) {
+							if (!label.matches("[0-9]+=\"[A-Za-z_][A-Za-z0-9_]*\"")) {
+								input.close();
+								throw new IncorrectFileFormatException("Labels can only be made of letters, digits and "
+										+ "the underscore character, but must not begin with a digit or contain whitespace.");
+							}
 						}
-					}
-					int numberOfLabels = labels.length;
+						int numberOfLabels = labels.length;
 
-					// add the init label if it doesn't exist
-					final String initLabel = "=\"init\"";
-					if (labelNames.contains(initLabel)) {
-						System.out.println("Warning: Ensure that only all initial states are labelled with \"init\".");
-					} else {
-						labelNames += " " + numberOfLabels + initLabel;
-						if (input.hasNextLine()) {
-							String[] labelLine = input.nextLine().split(":");
-							int state = Integer.parseInt(labelLine[0]) + 1;
-							if (state == 0) { // the initial state has other labels
-								output.append(state + ":" + labelLine[1] + " " + numberOfLabels + "\n");
+						// add the init label if it doesn't exist
+						if (labelNames.contains(initLabel)) {
+							System.out.println(
+									"Warning: Ensure that only all initial states are labelled with \"init\".");
+						} else {
+							labelNames += " " + numberOfLabels + initLabel;
+							if (input.hasNextLine()) {
+								String[] labelLine = input.nextLine().split(":");
+								int state = Integer.parseInt(labelLine[0]) + 1;
+								if (state == 0) { // the initial state has other labels
+									output.append(state + ":" + labelLine[1] + " " + numberOfLabels + "\n");
+								} else {
+									output.append("0: " + numberOfLabels + "\n");
+									output.append(state + ":" + labelLine[1] + "\n");
+								}
 							} else {
 								output.append("0: " + numberOfLabels + "\n");
-								output.append(state + ":" + labelLine[1] + "\n");
 							}
-						} else {
-							output.append("0: " + numberOfLabels + "\n");
+							numberOfLabels++;
 						}
-						numberOfLabels++;
-					}
 
-					// increase the ID of each state by 1
-					String[] labelLine;
-					while (input.hasNextLine()) {
-						labelLine = input.nextLine().split(":");
-						output.append((Integer.parseInt(labelLine[0]) + 1) + ":" + labelLine[1] + "\n");
-					}
-					input.close();
+						// increase the ID of each state by 1
+						String[] labelLine;
+						while (input.hasNextLine()) {
+							labelLine = input.nextLine().split(":");
+							output.append((Integer.parseInt(labelLine[0]) + 1) + ":" + labelLine[1] + "\n");
+						}
+						input.close();
 
-					// add the sink state if required
-					if (addSink) {
-						final String sinkLabel = "=\"sink\"";
-						if (labelNames.contains(sinkLabel)) {
-							System.out.println("Warning: The label \"sink\" may not be unique to the sink state.");
-							for (String label : labels) { // get the id of the sink label
-								if (label.contains(sinkLabel)) {
-									int id = Integer.parseInt(label.split("=")[0]);
-									output.append((states - 1) + ": " + id + "\n");
-									break;
+						// add the sink state if required
+						if (addSink) {
+							if (labelNames.contains(sinkLabel)) {
+								System.out.println("Warning: The label \"sink\" may not be unique to the sink state.");
+								for (String label : labels) { // get the id of the sink label
+									if (label.contains(sinkLabel)) {
+										int id = Integer.parseInt(label.split("=")[0]);
+										output.append((states - 1) + ": " + id + "\n");
+										break;
+									}
 								}
+							} else {
+								labelNames += " " + numberOfLabels + sinkLabel;
+								output.append((states - 1) + ": " + numberOfLabels + "\n");
 							}
-						} else {
-							labelNames += " " + numberOfLabels + sinkLabel;
-							output.append((states - 1) + ": " + numberOfLabels + "\n");
+						}
+
+					} else {
+						input.close();
+
+						// add the init label
+						labelNames = "0" + initLabel;
+						output.append("0: 0\n");
+
+						// add the sink state if required
+						if (addSink) {
+							labelNames += " 1" + sinkLabel;
+							output.append((states - 1) + ": 1\n");
 						}
 					}
 
@@ -177,7 +195,7 @@ public class JPFtoPRISM {
 					writer.close();
 				}
 			} catch (FileNotFoundException e) {
-				System.out.println("File could not be read or written.");
+				System.out.println("Could not read/write to file.");
 				e.printStackTrace();
 			}
 		}

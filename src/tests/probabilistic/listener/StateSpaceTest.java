@@ -81,13 +81,12 @@ public class StateSpaceTest extends TestJPF {
 	private static String[] multipleLabelMakerProperties = { "+cg.enumerate_random=true",
 			"+listener=probabilistic.listener.StateSpaceText;probabilistic.listener.StateLabelVisitor;probabilistic.listener.StateSpaceDot",
 			"+probabilistic.listener.StateSpaceDot.precision=6",
-			"+label.class = label.AllDifferent; label.Initial; label.End;"
-					+ "label.InvokedStaticMethod; label.PositiveIntegerLocalVariable;"
-					+ "label.ReturnedVoidMethod; label.BooleanStaticField",
+			"+label.class = label.Initial; label.End; label.IntegerLocalVariable;"
+					+ "label.InvokedMethod; label.ReturnedVoidMethod; label.BooleanStaticField",
 			"+label.BooleanStaticField.field = probabilistic.listener.StateSpaceTest$Tester.x; probabilistic.listener.StateSpaceTest$Tester.condition",
-			"+label.InvokedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.M(); probabilistic.listener.StateSpaceTest$Tester.N()",
+			"+label.InvokedMethod.method = probabilistic.listener.StateSpaceTest$Tester.M(); probabilistic.listener.StateSpaceTest$Tester.N()",
 			"+label.ReturnedVoidMethod.method = probabilistic.listener.StateSpaceTest$Tester.M(); probabilistic.listener.StateSpaceTest$Tester.N()",
-			"+label.PositiveIntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.multipleTest():y;"
+			"+label.IntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.multipleTest():y;"
 					+ "probabilistic.listener.StateSpaceTest.fieldAndVarTest():a; probabilistic.listener.StateSpaceTest.fieldAndVarTest():b" };
 
 	/**
@@ -125,6 +124,9 @@ public class StateSpaceTest extends TestJPF {
 
 		File dottyFile = new File(dottyFileName);
 		dottyFile.delete();
+
+		File legendFile = new File(StateSpaceTest.class.getName() + "_legend.dot");
+		legendFile.delete();
 	}
 
 	/**
@@ -186,27 +188,6 @@ public class StateSpaceTest extends TestJPF {
 	}
 
 	/**
-	 * Tests the listeners with labeling each state with a different character.
-	 */
-	@Test
-	public void allDifferentTest() {
-		singleLabelMakerProperties[3] = "+label.class=label.AllDifferent";
-		singleLabelMakerProperties[4] = "";
-
-		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
-			double[] choices = { 0.5, 0.5 };
-			if (Choice.make(choices) == 0) {
-				Tester.attribute = true;
-			} else {
-				Tester.attribute = false;
-			}
-		} else {
-			assertTrue(filesEqual(transitionFileName, path + "noTransitionLabels.tra"));
-			assertTrue(filesEqual(dottyFileName, path + "allDifferent.dot"));
-		}
-	}
-
-	/**
 	 * Tests the listeners with labeling the static boolean attribute "condition".
 	 */
 	@Test
@@ -236,25 +217,25 @@ public class StateSpaceTest extends TestJPF {
 	 * Tests the listeners with labeling local variables.
 	 */
 	@Test
-	public void positiveIntegerLocalVariableTest() {
-		singleLabelMakerProperties[3] = "+label.class=label.PositiveIntegerLocalVariable";
-		singleLabelMakerProperties[4] = "+label.PositiveIntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.positiveIntegerLocalVariableTest():variable";
+	public void integerLocalVariableTest() {
+		singleLabelMakerProperties[3] = "+label.class=label.IntegerLocalVariable";
+		singleLabelMakerProperties[4] = "+label.IntegerLocalVariable.variable = probabilistic.listener.StateSpaceTest.integerLocalVariableTest():variable";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			int variable = 0;
-			variable++; // positive
-			variable -= 3;
-			variable--;
-			variable = 5; // positive
-			variable /= 2; // positive
-			variable = (int) -12.0;
-			variable *= 2;
-			variable += 92; // positive
-			variable = variable - 110;
-			variable = 14;
+			variable++; // 1	
+			variable -= 3; // -2	
+			variable--; // -3	
+			variable = 5;	
+			variable /= 2; // 2	
+			variable %= 14; // 2 -> no break	
+			variable = (int) -12.0;	
+			variable *= 2; // -24	
+			variable += 92; // 68	
+			variable = variable - 110; // -42
 		} else {
-			assertTrue(filesEqual(transitionFileName, path + "positiveIntegerLocalVariable.tra"));
-			assertTrue(filesEqual(dottyFileName, path + "positiveIntegerLocalVariable.dot"));
+			assertTrue(filesEqual(transitionFileName, path + "integerLocalVariable.tra"));
+			assertTrue(filesEqual(dottyFileName, path + "integerLocalVariable.dot"));
 		}
 	}
 
@@ -262,9 +243,9 @@ public class StateSpaceTest extends TestJPF {
 	 * Tests the listeners with labeling the invoke of a static method.
 	 */
 	@Test
-	public void invokedStaticMethodTest() {
-		singleLabelMakerProperties[3] = "+label.class=label.InvokedStaticMethod";
-		singleLabelMakerProperties[4] = "+label.InvokedStaticMethod.method = probabilistic.listener.StateSpaceTest$Tester.M()";
+	public void invokedMethodTest() {
+		singleLabelMakerProperties[3] = "+label.class=label.InvokedMethod";
+		singleLabelMakerProperties[4] = "+label.InvokedMethod.method = probabilistic.listener.StateSpaceTest$Tester.M()";
 
 		if (verifyNoPropertyViolation(singleLabelMakerProperties)) {
 			double[] choices = { 0.5, 0.5 };
@@ -308,7 +289,7 @@ public class StateSpaceTest extends TestJPF {
 
 	/**
 	 * Tests the listeners with labeling the locking and unlocking of a synchronized
-	 * method.
+	 * static method.
 	 */
 	@Test
 	public void synchronizedStaticMethodTest() {
@@ -401,12 +382,12 @@ public class StateSpaceTest extends TestJPF {
 			Tester.condition = false;
 			Tester.attribute = false; // not labeled
 			int a = 1;
-			int b = -5;
+			int b = -1;
 			int c = -2; // not labeled
 
 			Tester.x = false;
 			a = -4;
-			for (int i = 0; i < 12; i++) {
+			for (int i = 0; i < 3; i++) {
 				b++;
 			}
 			double[] choices = { 0.5, 0.5 };

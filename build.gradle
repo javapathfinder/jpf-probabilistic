@@ -39,15 +39,27 @@ if (jpfLabel != null) {
     jpfLabelExists = new File(jpfLabel).exists()
 }
 
+configurations {
+    examplesImplementation
+}
+
 dependencies {
     implementation files("${jpfCore}/build/jpf.jar")
     if (jpfLabelExists) {
         implementation files("${jpfLabel}/build/jpf-label.jar")
     }
     testImplementation "junit:junit:4.12"
+    examplesImplementation("net.objecthunter:exp4j:0.4.8", "org.apache.commons:commons-math3:3.6.1")
 }
 
 apply from: "gradle/source-sets.gradle"
+
+configurations.examplesImplementation.setCanBeResolved(true)
+
+task copyDependencies(type: Copy) {
+    from configurations.examplesImplementation
+    into "lib"
+}
 
 task compile {
     group = "jpf-probabilistic build"
@@ -55,6 +67,7 @@ task compile {
 
     dependsOn compilePeersJava
     dependsOn compileExamplesJava
+    dependsOn copyDependencies
 }
 
 task createJpfProbabilisticJar(type: Jar) {

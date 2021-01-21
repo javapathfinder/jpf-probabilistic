@@ -1,0 +1,20 @@
+# app checked by JPF
+target=probabilistic.test.PolynomialIdentities
+
+# command line arguments of app
+target.args=(x - y)(x + y) + (y - z)(y + z) + (z - x)(z + x) - 0.5 * x,x,y,z
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# exp4j-0.4.8.jar is licensed under the Apache License, Version 2.0
+classpath+=,${jpf-probabilistic}/lib/exp4j-0.4.8.jar
+
+# using the JPF extensions jpf-probabilistic
+@using jpf-probabilistic
+
+# generate a textual representation of the Markov chain
+listener=probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot

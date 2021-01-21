@@ -108,32 +108,32 @@ coded in Java as follows.
 	}
 
 JPF, extended with jpf-probabilistic and configured appropriately, can write 
-the Markov chain underlying an app, called DieTest, that invokes the above roll 
+the Markov chain underlying an app, called KnuthYaoDie, that invokes the above roll 
 method, to a file.  For example, if we use the following configuration file
 
     @using jpf-probabilistic
-    target = probabilistic.examples.DieTest
+    target = probabilistic.test.KnuthYaoDie
     listener = probabilistic.listener.StateSpaceText
 
-then JPF writes the following output to the file probabilistic.examples.DieTest.tra.
+then JPF writes the following output to the file probabilistic.test.KnuthYaoDie.tra.
 
      9 16
-     -1 0 1.000000
-     0 1 0.500000
-     1 2 0.500000
-     2 1 0.500000
-     2 3 0.500000
-     3 3 1.000000
-     1 4 0.500000
-     4 3 0.500000
-     4 3 0.500000
-     0 5 0.500000
-     5 6 0.500000
-     6 3 0.500000
-     6 3 0.500000
-     5 7 0.500000
-     7 3 0.500000
-     7 5 0.500000
+     -1 0 1.0
+     0 1 0.5
+     1 2 0.5
+     2 1 0.5
+     2 3 0.5
+     3 3 1.0
+     1 4 0.5
+     4 3 0.5
+     4 3 0.5
+     0 5 0.5
+     5 6 0.5
+     6 3 0.5
+     6 3 0.5
+     5 7 0.5
+     7 3 0.5
+     7 5 0.5
 
 The first line contains the number of states and the number of transitions.
 The remaining lines describe the transitions.  Each line contains the 
@@ -148,11 +148,11 @@ DOT format, to a file, so that it can be viewed using dotty.  For example,
 if we run JPF on the following configuration file
 
     @using jpf-probabilistic
-    target = probabilistic.examples.DieTest
+    target = probabilistic.test.KnuthYaoDie
     listener = probabilistic.listener.StateSpaceDot
     probabilistic.listener.StateSpaceDot.precision = 1
 
-then JPF produces a file named probabilistic.examples.DieTest.dot with
+then JPF produces a file named probabilistic.test.KnuthYaoDie.dot with
 the following content.
 
     digraph statespace {

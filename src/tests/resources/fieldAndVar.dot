@@ -1,24 +1,28 @@
 digraph statespace {
 node [colorscheme="set312" style=wedged]
--1 [fillcolor="1:2"]
-0 [fillcolor="3:4:5:6"]
+-1 [style=filled fillcolor=1]
+0 [fillcolor="2:3:4"]
 -1 -> 0 [ label="1.000000" ];
-1 [fillcolor="4:5:6:7"]
+1 [fillcolor="2:3:4:5"]
 0 -> 1 [ label="1.000000" ];
-2 [fillcolor="5:6:8"]
+2 [fillcolor="3:4:5:6"]
 1 -> 2 [ label="1.000000" ];
-3 [fillcolor="5:6:9:10"]
+3 [fillcolor="3:4:6:7"]
 2 -> 3 [ label="1.000000" ];
-4 [fillcolor="5:6:10:11"]
+4 [fillcolor="3:4:6:8"]
 3 -> 4 [ label="1.000000" ];
-5 [fillcolor="5:6:12:#80f31f"]
-4 -> 5 [ label="0.500000" ];
-5 -> 5 [ label="1.000000" ];
-6 [fillcolor="5:10:#d5078e:#01beca"]
-4 -> 6 [ label="0.500000" ];
-7 [fillcolor="10:#01beca:#e49c03:#6917ed"]
-6 -> 7 [ label="1.000000" ];
-8 [fillcolor="#80f31f:#01beca:#6917ed:#3bfd5b"]
-7 -> 8 [ label="1.000000" ];
-8 -> 8 [ label="1.000000" ];
+5 [fillcolor="3:4:6:9"]
+4 -> 5 [ label="1.000000" ];
+6 [fillcolor="3:4:6:9"]
+5 -> 6 [ label="1.000000" ];
+7 [fillcolor="3:4:10"]
+6 -> 7 [ label="0.500000" ];
+7 -> 7 [ label="1.000000" ];
+8 [fillcolor="3:6:9:11"]
+6 -> 8 [ label="0.500000" ];
+9 [fillcolor="6:9:11:12"]
+8 -> 9 [ label="1.000000" ];
+10 [fillcolor="10:11:12"]
+9 -> 10 [ label="1.000000" ];
+10 -> 10 [ label="1.000000" ];
 }

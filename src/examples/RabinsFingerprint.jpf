@@ -1,0 +1,17 @@
+# app checked by JPF
+target=probabilistic.test.RabinsFingerprint
+
+# command line arguments of app
+target.args=25,0100100001100101011011000110110001101111001000000101011101101111011100100110110001100100,0100100001100101011011000110110001101111001000000101011101101111011100100110110001100100
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-probabilistic
+@using jpf-probabilistic
+
+# generate a textual representation of the Markov chain
+listener=probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot

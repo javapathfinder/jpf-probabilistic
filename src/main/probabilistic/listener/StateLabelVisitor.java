@@ -54,6 +54,7 @@ public class StateLabelVisitor extends StateLabel implements Visitor {
 
 	@Override
 	public void writeStateLabels(Search search, String name) {
+		this.generateLegendFile();
 	}
 
 	@Override

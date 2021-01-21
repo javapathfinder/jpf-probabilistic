@@ -1,0 +1,21 @@
+# app checked by JPF
+target=probabilistic.test.KnuthYaoDie
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-label and jpf-probabilistic
+@using jpf-label
+@using jpf-probabilistic
+
+# label those states in which the method roll returns with the returned value
+label.class=label.ReturnedIntegerMethod
+label.ReturnedIntegerMethod.method=probabilistic.examples.KnuthYaoDie.roll()
+
+# generate a textual representation of the labelled Markov chain
+listener=label.StateLabelText,probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the labelled Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot,probabilistic.listener.StateLabelVisitor
+
+

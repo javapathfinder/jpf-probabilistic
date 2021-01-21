@@ -1,0 +1,17 @@
+# app checked by JPF
+target=probabilistic.test.MajorityElement
+
+# command line arguments of app
+target.args=3,3,12,5,6,5,4,3
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-probabilistic
+@using jpf-probabilistic
+
+# generate a textual representation of the Markov chain
+listener=probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot

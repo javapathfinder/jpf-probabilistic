@@ -25,7 +25,6 @@ import gov.nasa.jpf.search.Search;
 import gov.nasa.jpf.search.SearchListener;
 import gov.nasa.jpf.vm.ChoiceGenerator;
 import probabilistic.vm.Probabilistic;
-import probabilistic.vm.ProbabilisticChoiceGenerator;
 
 /**
  * This abstract listener handles the writing of the state space to a file,
@@ -61,13 +60,6 @@ public abstract class StateSpace extends ListenerAdapter implements SearchListen
 		ChoiceGenerator<?> cg = search.getVM().getChoiceGenerator();
 		if (cg instanceof Probabilistic) {
 			double probability = ((Probabilistic) cg).getProbability();
-
-			// make sure the sum of the probabilities = 1.0 after applying the precision
-			if (cg instanceof ProbabilisticChoiceGenerator && !cg.hasMoreChoices()) {
-				double[] probabilities = ((ProbabilisticChoiceGenerator) cg).getProcesedProbabilities();
-				probability = 1.0 - getSum(probabilities, probabilities.length - 1); // 1.0 - previous choices
-			}
-
 			this.addTransition(this.source, target, probability);
 		} else {
 			this.addTransition(this.source, target, 1.0);

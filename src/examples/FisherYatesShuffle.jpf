@@ -1,0 +1,22 @@
+# app checked by JPF
+target=probabilistic.test.FisherYatesShuffle
+
+# command line arguments of app
+target.args=1,1,2
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-label and jpf-probabilistic
+@using jpf-label
+@using jpf-probabilistic
+
+# label the states with the value of integer static field permutation
+label.class=label.IntegerStaticField
+label.IntegerStaticField.field=probabilistic.examples.FisherYatesShuffle.permutation
+
+# generate a textual representation of the labelled Markov chain
+listener=label.StateLabelText,probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the labelled Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot,probabilistic.listener.StateLabelVisitor

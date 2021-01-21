@@ -1,0 +1,22 @@
+# app checked by JPF
+target=probabilistic.test.MillerRabinPrimalityTest
+
+# command line arguments of app
+target.args=9,2
+
+# directory that contains the bytecode of the app
+classpath=${jpf-probabilistic}/build/examples
+
+# using the JPF extensions jpf-label and jpf-probabilistic
+@using jpf-label
+@using jpf-probabilistic
+
+# label the states in which isPrime returns with the returned value
+label.class=label.ReturnedBooleanMethod
+label.ReturnedBooleanMethod.method=probabilistic.examples.MillerRabinPrimalityTest.isPrime(int,int)
+
+# generate a textual representation of the labelled Markov chain
+listener=label.StateLabelText,probabilistic.listener.StateSpaceText
+
+# generate a graphical representation of the labelled Markov chain 
+listener+=,probabilistic.listener.StateSpaceDot,probabilistic.listener.StateLabelVisitor
